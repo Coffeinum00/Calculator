@@ -70,6 +70,8 @@ class _HomePageState extends State<HomePage> {
     'x',
     'CE',
     'C',
+
+    //for commit!
     const Icon(
       TablerIcons.backspace,
       size: 40,
