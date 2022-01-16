@@ -4,6 +4,8 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class HomePage extends StatefulWidget {
   // statefull żeby appka myślała i była reaktywna
+  // gdy statefull użyj restart (zielona strzałka) a nie hot reload, bo appka już zapamiętuje!
+
   HomePage({Key? key}) : super(key: key);
 
   @override
@@ -130,15 +132,20 @@ class _HomePageState extends State<HomePage> {
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MyTextWidget(
-                    text: equation,
-                    color: Colors.grey,
-                    size: 20.0,
-                  ),
-                ],
+              Container(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width - 16,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    MyTextWidget(
+                      text: equation,
+                      color: Colors.grey,
+                      size: 20.0,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 20.0,
@@ -217,15 +224,27 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: 4),
                   itemBuilder: (contx, index) {
                     return myButton(listButtons[index], () {
-                      if (listButtons[index] is String) {
+                      if (listButtons[index] is String &&
+                          listButtons[index] != 'CE' &&
+                          listButtons[index] != 'C') {
+                        // || -> or
+                        // && -> and
                         // if (int.tryParse(listButtons[index]) is int) {
-                        setState(() {
-                          // możemy przypisać nową wartość do danej jednostki i odświeża appke
-                          equation = equation! + listButtons[index];
-                          // wykrzyknik żeby upewnić się, że nie jest nullem
-                        });
                         // }
+                        setState(() {
+                          equation = equation! + listButtons[index];
+                        });
+                      }
 
+                      if (listButtons[index] is Icon) {
+                        Icon icon = listButtons[index];
+
+                        if (icon.icon == TablerIcons.backspace) {
+                          setState(() {
+                            equation =
+                                equation!.substring(0, equation!.length - 1);
+                          });
+                        }
                       }
                     },
                         index >= listButtons.length - 4
@@ -238,6 +257,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void myButtonFunction() {}
 
   Widget myButton(
     buttonConntent,
@@ -263,4 +284,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-// W/rst_flutter_ap( 9652): Reducing the number of considered missed Gc histogram windows from 119 to 100
