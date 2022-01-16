@@ -1,6 +1,7 @@
 import 'package:first_flutter_app/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class HomePage extends StatefulWidget {
   // statefull żeby appka myślała i była reaktywna
@@ -231,8 +232,19 @@ class _HomePageState extends State<HomePage> {
                         // && -> and
                         // if (int.tryParse(listButtons[index]) is int) {
                         // }
+
                         setState(() {
+                          // equation = equation! + listButtons[index];
+
                           equation = equation! + listButtons[index];
+                        });
+                      }
+
+                      if (listButtons[index] is String &&
+                          listButtons[index] == 'C') {
+                        setState(() {
+                          equation = '';
+                          sum = '0';
                         });
                       }
 
@@ -244,6 +256,8 @@ class _HomePageState extends State<HomePage> {
                             equation =
                                 equation!.substring(0, equation!.length - 1);
                           });
+                        } else if (icon.icon == TablerIcons.equal) {
+                          sumFunction();
                         }
                       }
                     },
@@ -258,7 +272,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void myButtonFunction() {}
+  sumFunction() {
+    Parser p = Parser();
+    String input = equation!.replaceAll('x', '*');
+
+    Expression exp = p.parse(input);
+
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+
+    setState(() {
+      sum = eval.toString();
+    });
+  }
 
   Widget myButton(
     buttonConntent,
