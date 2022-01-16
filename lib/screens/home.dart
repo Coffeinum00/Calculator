@@ -2,16 +2,57 @@ import 'package:first_flutter_app/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  // statefull żeby appka myślała i była reaktywna
   HomePage({Key? key}) : super(key: key);
 
-  String equation = 'equation';
-  String sum = 'sum';
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // rozszerza homepage o stan [state]
+
+  String? equation;
+
+  String? sum;
+
+  @override
+  void initState() {
+    super.initState();
+    equation = '';
+    sum = '0';
+
+    // gdy widget się zbuduje wykona to co tu jest jako pierwsze
+  }
+
   List listButtons = [
-    '+/-',
+    Row(
+      children: [
+        const Icon(
+          TablerIcons.plus,
+          size: 20,
+          color: Colors.black,
+        ),
+        MyTextWidget(
+          size: 20,
+          color: Colors.black,
+          text: '/',
+        ),
+        const Icon(
+          TablerIcons.minus,
+          size: 20,
+          color: Colors.black,
+        ),
+      ],
+    ),
     '0',
-    '.',
-    '=',
+    ',',
+    const Icon(
+      TablerIcons.equal,
+      size: 40,
+      color: Colors.black,
+    ),
     '1',
     '2',
     '3',
@@ -26,22 +67,23 @@ class HomePage extends StatelessWidget {
     'x',
     'CE',
     'C',
-    'BS',
-    '/'
-  ];
-
-  List functionButtons = [
-    Icon(
+    const Icon(
+      TablerIcons.backspace,
+      size: 40,
+      color: Colors.black,
+    ),
+    '/',
+    const Icon(
       TablerIcons.percentage,
       size: 40,
       color: Colors.black,
     ),
-    Icon(
+    const Icon(
       TablerIcons.square_root,
       size: 40,
       color: Colors.black,
     ),
-    Icon(
+    const Icon(
       TablerIcons.superscript,
       size: 40,
       color: Colors.black,
@@ -49,10 +91,12 @@ class HomePage extends StatelessWidget {
     '1/x',
   ];
 
+  List functionButtons = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[100],
+      backgroundColor: Colors.blue[100],
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -116,14 +160,19 @@ class HomePage extends StatelessWidget {
                 thickness: 1.5,
                 color: Colors.grey,
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  itemBuilder: (ctxt, index) {
-                    return myButton(functionButtons[index], () {});
-                    ;
-                  }),
-              // Row(
+              // Container(
+              //   width: 250.0,
+              //   height: 100.0,
+              //   child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,
+              //       shrinkWrap: true,
+              //       itemCount: 4,
+              //       itemBuilder: (ctxt, index) {
+              //         return myButton(functionButtons[index], () {});
+              //         ;
+              //       }),
+              // ),
+              // // Row(
               //   children: [
               //     myButton('%', () {
               //       print('hola amigo');
@@ -167,7 +216,21 @@ class HomePage extends StatelessWidget {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (contx, index) {
-                    return myButton(listButtons[index], () {});
+                    return myButton(listButtons[index], () {
+                      if (listButtons[index] is String) {
+                        // if (int.tryParse(listButtons[index]) is int) {
+                        setState(() {
+                          // możemy przypisać nową wartość do danej jednostki i odświeża appke
+                          equation = equation! + listButtons[index];
+                          // wykrzyknik żeby upewnić się, że nie jest nullem
+                        });
+                        // }
+
+                      }
+                    },
+                        index >= listButtons.length - 4
+                            ? Colors.blue[800]
+                            : null);
                   })
             ],
           ),
@@ -179,10 +242,14 @@ class HomePage extends StatelessWidget {
   Widget myButton(
     buttonConntent,
     function,
+    color,
   ) {
+    color = color ?? Colors.blue[200];
+    // color = color chyba  że color nie został podany to będzie white
+
     return MaterialButton(
-      elevation: 5.0,
-      color: Colors.white,
+      elevation: 0.0,
+      color: color,
       child: (buttonConntent is String)
           // jeżeli text jest Stringiem to wyświetl widget
           ? MyTextWidget(
@@ -196,3 +263,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+// W/rst_flutter_ap( 9652): Reducing the number of considered missed Gc histogram windows from 119 to 100
