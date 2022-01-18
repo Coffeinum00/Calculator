@@ -6,10 +6,11 @@ class MyTextWidget extends StatelessWidget {
   double? size;
 
   MyTextWidget({
+    Key? key,
     this.text,
     this.color,
     this.size,
-  });
+  }) : super(key: key);
 // MyTextWidget (this.text, this.color);
 // MyTextWidget ({required this.text, this.color}); tu text być musi, kolor być może
   @override

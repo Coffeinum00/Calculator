@@ -70,8 +70,6 @@ class _HomePageState extends State<HomePage> {
     'x',
     'CE',
     'C',
-
-    //for commit!
     const Icon(
       TablerIcons.backspace,
       size: 40,
@@ -96,7 +94,7 @@ class _HomePageState extends State<HomePage> {
     '1/x',
   ];
 
-  List functionButtons = [];
+  // List functionButtons = [];
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +115,9 @@ class _HomePageState extends State<HomePage> {
           size: 40.0,
           color: Colors.black,
         ),
-        actions: [
+        actions: const [
           // acctions to wszystko co jest po prawej stronie od title w appbarze
-          const Icon(
+          Icon(
             Icons.history,
             size: 40.0,
             color: Colors.black,
@@ -129,23 +127,24 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: ListView(
-            shrinkWrap: true,
+          child: Column(
+            // shrinkWrap: true,
             // mainAxisSize: MainAxisSize.min,
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Container(
-                height: 50.0,
-                width: MediaQuery.of(context).size.width - 16,
+              Expanded(
+                // height: 50.0,
+                // width: MediaQuery.of(context).size.width - 16,
                 child: ListView(
-                  shrinkWrap: true,
+                  reverse: true,
+                  // shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   children: [
                     MyTextWidget(
                       text: equation,
-                      color: Colors.grey,
-                      size: 20.0,
+                      color: Colors.black,
+                      size: 30.0,
                     ),
                   ],
                 ),
@@ -159,12 +158,12 @@ class _HomePageState extends State<HomePage> {
                   MyTextWidget(
                     text: sum,
                     color: Colors.blue,
-                    size: 35.0,
+                    size: 20.0,
                   ),
                 ],
               ),
               const SizedBox(
-                height: 20.0,
+                height: 2.0,
               ),
               const Divider(
                 thickness: 1.5,
@@ -224,12 +223,14 @@ class _HomePageState extends State<HomePage> {
                   itemCount: listButtons.length,
                   // jeśli builder musi być itemCount!
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4),
+                      crossAxisCount: 4, childAspectRatio: 1),
                   itemBuilder: (contx, index) {
                     return myButton(listButtons[index], () {
                       if (listButtons[index] is String &&
                           listButtons[index] != 'CE' &&
-                          listButtons[index] != 'C') {
+                          listButtons[index] != 'C' &&
+                          listButtons[index] != '1/x') {
+                        // != nie jest równe
                         // || -> or
                         // && -> and
                         // if (int.tryParse(listButtons[index]) is int) {
@@ -245,8 +246,15 @@ class _HomePageState extends State<HomePage> {
                       if (listButtons[index] is String &&
                           listButtons[index] == 'C') {
                         setState(() {
+                          // setState odświeża ekran
                           equation = '';
                           sum = '0';
+                        });
+                      }
+                      if (listButtons[index] is String &&
+                          listButtons[index] == '1/x') {
+                        setState(() {
+                          equation = '1/($equation)';
                         });
                       }
 
@@ -260,6 +268,17 @@ class _HomePageState extends State<HomePage> {
                           });
                         } else if (icon.icon == TablerIcons.equal) {
                           sumFunction();
+                        } else if (icon.icon == TablerIcons.percentage) {
+                          setState(() {
+                            equation = "($equation)/100";
+                          });
+                        } else if (icon.icon == TablerIcons.square_root) {
+                          setState(() {
+                            equation = "($equation)^(1/2)";
+                          });
+                        } else if (icon.icon == TablerIcons.superscript) {
+                          // setState(() {});
+                          equation = "($equation)^2";
                         }
                       }
                     },
